@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.3)
 
 project(yolosort)
 list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
@@ -11,6 +11,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_BUILD_TYPE Release)
 
 find_package(CUDA REQUIRED)
+# Eigen
+find_package(Eigen3 3.3 REQUIRED)
 set(CUDA_NVCC_PLAGS ${CUDA_NVCC_PLAGS};-std=c++11;-g;-G;-gencode;arch=compute_53;code=sm_53)
 
 if(WIN32)
@@ -23,14 +25,18 @@ include_directories(${PROJECT_SOURCE_DIR}/deepsort/include)
 include_directories(/usr/local/cuda/include)
 link_directories(/usr/local/cuda/lib64)
 # tensorrt
-include_directories(/usr/include/aarch64-linux-gnu/)
-link_directories(/usr/lib/aarch64-linux-gnu/)
+include_directories(/work/tools/TensorRT-8.0.3.4/include/)
+link_directories(/work/tools/TensorRT-8.0.3.4/lib/)
+
+
 
 include_directories(
     ${CUDA_INCLUDE_DIRS}
     ${OpenCV_INCLUDE_DIRS}
+    "/usr/include/eigen3"
     ${PROJECT_SOURCE_DIR}/deepsort/include
 )
+message("eigen include " ${EIGEN_INCLUDE_DIR})
 aux_source_directory(${PROJECT_SOURCE_DIR}/deepsort/src SRC_DIR)
 
 # ===== deepsort =====
